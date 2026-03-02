@@ -1,4 +1,4 @@
-# Zumbizus - Landing Page
+# Zumbizus - Web Page
 
 Este projeto consiste no site de divulgação do jogo Zumbizus, desenvolvido com Next.js e TypeScript.
 
