@@ -4,6 +4,7 @@ import "./globals.css";
 import Footer from "@/components/footer";
 import Header from "@/components/header";
 import {NuqsAdapter} from "nuqs/adapters/next";
+import TargetCursor from "@/components/target-cursor";
 
 export const metadata: Metadata = {
     title: "Zumbizus",
@@ -21,10 +22,17 @@ export default function RootLayout({
         <NuqsAdapter>
             <ThemeProvider
                 attribute="class"
-                defaultTheme="system"
+                defaultTheme="dark"
+                forcedTheme="dark"
                 enableSystem
                 disableTransitionOnChange
             >
+                <TargetCursor
+                    spinDuration={2}
+                    hideDefaultCursor
+                    parallaxOn
+                    hoverDuration={0.2}
+                />
                 <Header/>
                 {children}
                 <Footer/>
