@@ -4,7 +4,11 @@ services:
     image: mariadb
     restart: always
     environment:
-      - MARIADB_ROOT_PASSWORD=${DB_PASSWORD}
+      - MARIADB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MARIADB_PASSWORD=${DB_PASSWORD}
+      - MARIADB_USER=${DB_USER}
+      - MARIADB_DATABASE=${DB_NAME}
+    ports:
+      - "3306:3306"
     volumes:
-      - "./mariadb-data/data:/var/lib/mysql/data/"
-      - "./mariadb-data/logs:/var/lib/mysql/logs/"
+      - ./mariadb-data/mysql:/var/lib/mysql
