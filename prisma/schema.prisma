@@ -1,0 +1,88 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model User {
+  id              Int            @id @default(autoincrement())
+  email           String         @unique
+  oauthProvider   String
+  oauthProviderId String
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  npcs            Npc[]
+  npcRejections   NpcRejection[]
+}
+
+enum HairOption {
+  none
+  bald
+  buzzCut
+  quiff
+  bobCut
+  shortStraight
+  longStraight
+  shortWavy
+  longWavy
+  shortCurly
+  longCurly
+  afro
+  ponytail
+  braids
+  dreadlocks
+  mohawk
+}
+
+enum ApprovalStatus {
+  pending
+  approved
+  rejected
+}
+
+enum Category {
+  creation
+  production
+  supplies
+  defense
+  commerce
+}
+
+enum Gender {
+  male
+  female
+  other
+}
+
+model Npc {
+  id               Int            @id @default(autoincrement())
+  name             String
+  approved         Boolean        @default(false)
+  user             User           @relation(fields: [userId], references: [id])
+  userId           Int
+  gender           Gender
+  hairColor        String
+  skinColor        String
+  hairOption       HairOption
+  selectedCategory Category
+  approvalStatus   ApprovalStatus @default(pending)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  npcRejections    NpcRejection[]
+}
+
+model NpcRejection {
+  id         Int      @id @default(autoincrement())
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int
+  npc        Npc      @relation(fields: [npcId], references: [id])
+  npcId      Int
+  reason     String   @db.Text
+  rejectedAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([npcId])
+}
