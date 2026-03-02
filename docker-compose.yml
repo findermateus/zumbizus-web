@@ -1,0 +1,10 @@
+services:
+  db:
+    container_name: "database"
+    image: mariadb
+    restart: always
+    environment:
+      - MARIADB_ROOT_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - "./mariadb-data/data:/var/lib/mysql/data/"
+      - "./mariadb-data/logs:/var/lib/mysql/logs/"
