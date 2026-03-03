@@ -3,8 +3,8 @@ import {ThemeProvider} from "@/components/theme-provider";
 import "./globals.css";
 import Footer from "@/components/footer";
 import Header from "@/components/header";
-import {NuqsAdapter} from "nuqs/adapters/next";
 import TargetCursor from "@/components/target-cursor";
+import {NuqsAdapter} from "nuqs/adapters/next";
 
 export const metadata: Metadata = {
     title: "Zumbizus",

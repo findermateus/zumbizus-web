@@ -4,12 +4,14 @@ export interface GlassIconsItem {
   icon: React.ReactElement;
   color: string;
   label: string;
+  value: string;
   customClass?: string;
 }
 
 export interface GlassIconsProps {
   items: GlassIconsItem[];
   className?: string;
+  onSelect: (value: string) => void;
 }
 
 const gradientMapping: Record<string, string> = {
@@ -21,7 +23,7 @@ const gradientMapping: Record<string, string> = {
   green: 'linear-gradient(hsl(123, 90%, 40%), hsl(108, 90%, 40%))'
 };
 
-const GlassIcons: React.FC<GlassIconsProps> = ({ items, className }) => {
+const GlassIcons: React.FC<GlassIconsProps> = ({ items, className, onSelect }) => {
   const getBackgroundStyle = (color: string): React.CSSProperties => {
     if (gradientMapping[color]) {
       return { background: gradientMapping[color] };
@@ -33,6 +35,7 @@ const GlassIcons: React.FC<GlassIconsProps> = ({ items, className }) => {
     <div className={`grid gap-[5em] grid-cols-2 md:grid-cols-4 mx-auto py-[3em] overflow-visible ${className || ''}`}>
       {items.map((item, index) => (
         <button
+            onClick={() => onSelect(item.value)}
           key={index}
           type="button"
           aria-label={item.label}

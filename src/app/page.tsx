@@ -8,6 +8,7 @@ import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "@/components
 import GlareHover from "@/components/glare-hover";
 import GlassIcons, {GlassIconsItem} from "@/components/glass-icons";
 import Link from "next/link";
+import GlassIconsSection from "@/components/glass-icons-section";
 
 const carouselItems: CarouselItem[] = [
     {
@@ -37,22 +38,26 @@ const glassIconsItems: GlassIconsItem[] = [
     {
         icon: <Swords className="w-full h-full text-white"/>,
         color: "#1f8e00",
-        label: "Combate"
+        label: "Combate",
+        value: "combat"
     },
     {
         icon: <Heart className="w-full h-full text-white"/>,
         color: "#1f8e00",
-        label: "Sobrevivência"
+        label: "Sobrevivência",
+        value: "survival"
     },
     {
         icon: <PackageOpen className="w-full h-full text-white"/>,
         color: "#1f8e00",
-        label: "Extração"
+        label: "Extração",
+        value: "extraction"
     },
     {
         icon: <Building2 className="w-full h-full text-white"/>,
         color: "#1f8e00",
-        label: "Gerenciamento de Base"
+        label: "Gerenciamento de Base",
+        value: "baseManagement"
     }
 ];
 
@@ -143,12 +148,7 @@ export default function Home() {
 
                     <Separator className="my-16"/>
 
-                    <div className="py-16">
-                        <h2 className="text-2xl font-bold text-foreground text-center mb-4">
-                            Mecânicas do Jogo
-                        </h2>
-                        <GlassIcons items={glassIconsItems} className="max-w-2xl"/>
-                    </div>
+                    <GlassIconsSection items={glassIconsItems}/>
                 </div>
             </main>
         </div>
