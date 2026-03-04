@@ -6,9 +6,10 @@ import {Separator} from "@/components/ui/separator";
 import {Button} from "@/components/ui/button";
 import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import GlareHover from "@/components/glare-hover";
-import GlassIcons, {GlassIconsItem} from "@/components/glass-icons";
+import {GlassIconsItem} from "@/components/glass-icons";
 import Link from "next/link";
 import GlassIconsSection from "@/components/glass-icons-section";
+import TargetCursorWrapper from "@/components/target-cursor-wrapper";
 
 const carouselItems: CarouselItem[] = [
     {
@@ -64,6 +65,7 @@ const glassIconsItems: GlassIconsItem[] = [
 export default function Home() {
     return (
         <div className="min-h-screen bg-background">
+            <TargetCursorWrapper/>
             <main className="container mx-auto px-4 py-24">
                 <div className="mx-auto max-w-6xl">
                     <div className="text-center mb-16">

@@ -1,12 +1,6 @@
 "use client";
 
 import GlassIcons, {GlassIconsItem} from "@/components/glass-icons";
-import {
-    Dialog, DialogClose,
-    DialogDescription, DialogFooter,
-    DialogHeader, DialogPanel, DialogPopup,
-    DialogTitle
-} from "@/components/ui/dialog";
 import {useQueryState} from "nuqs";
 
 interface GlassIconsSectionProps {
@@ -121,23 +115,7 @@ export default function GlassIconsSection({items}: GlassIconsSectionProps) {
                 className="max-w-2xl"
             />
 
-            <Dialog open={selectedMechanic !== null} onOpenChange={handleOpenChange}>
-                <DialogPopup>
-                    {
-                        content && (<>
-                                <DialogHeader>
-                                    <DialogTitle>{content.title}</DialogTitle>
-                                    <DialogDescription>{content.description}</DialogDescription>
-                                </DialogHeader>
-                                <DialogPanel>{content.details}</DialogPanel>
-                            </>
-                        )
-                    }
-                    <DialogFooter>
-                        <DialogClose className="cursor-target">Fechar</DialogClose>
-                    </DialogFooter>
-                </DialogPopup>
-            </Dialog>
+            {/*TODO adicionar dialog*/}
         </div>
     );
 }

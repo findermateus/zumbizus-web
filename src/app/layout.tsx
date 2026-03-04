@@ -3,8 +3,8 @@ import {ThemeProvider} from "@/components/theme-provider";
 import "./globals.css";
 import Footer from "@/components/footer";
 import Header from "@/components/header";
-import TargetCursor from "@/components/target-cursor";
 import {NuqsAdapter} from "nuqs/adapters/next";
+import {Suspense} from "react";
 
 export const metadata: Metadata = {
     title: "Zumbizus",
@@ -20,23 +20,19 @@ export default function RootLayout({
         <html lang="pt-BR" suppressHydrationWarning>
         <body className="antialiased">
         <NuqsAdapter>
-            <ThemeProvider
-                attribute="class"
-                defaultTheme="dark"
-                forcedTheme="dark"
-                enableSystem
-                disableTransitionOnChange
-            >
-                <TargetCursor
-                    spinDuration={2}
-                    hideDefaultCursor
-                    parallaxOn
-                    hoverDuration={0.2}
-                />
-                <Header/>
-                {children}
-                <Footer/>
-            </ThemeProvider>
+            <Suspense fallback={<></>}>
+                <ThemeProvider
+                    attribute="class"
+                    defaultTheme="dark"
+                    forcedTheme="dark"
+                    enableSystem
+                    disableTransitionOnChange
+                >
+                    <Header/>
+                    {children}
+                    <Footer/>
+                </ThemeProvider>
+            </Suspense>
         </NuqsAdapter>
         </body>
         </html>
