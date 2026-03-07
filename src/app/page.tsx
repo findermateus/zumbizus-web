@@ -43,12 +43,6 @@ const glassIconsItems: GlassIconsItem[] = [
         value: "combat"
     },
     {
-        icon: <Heart className="w-full h-full text-white"/>,
-        color: "#1f8e00",
-        label: "Sobrevivência",
-        value: "survival"
-    },
-    {
         icon: <PackageOpen className="w-full h-full text-white"/>,
         color: "#1f8e00",
         label: "Extração",
@@ -59,6 +53,12 @@ const glassIconsItems: GlassIconsItem[] = [
         color: "#1f8e00",
         label: "Gerenciamento de Base",
         value: "baseManagement"
+    },
+    {
+        icon: <Heart className="w-full h-full text-white"/>,
+        color: "#1f8e00",
+        label: "Sobrevivência",
+        value: "survival"
     }
 ];
 

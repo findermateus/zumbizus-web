@@ -42,3 +42,5 @@ next-env.d.ts
 .idea/
 mariadb-data/
 /src/generated/prisma
+
+/public/videos

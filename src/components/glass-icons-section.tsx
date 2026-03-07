@@ -2,20 +2,29 @@
 
 import GlassIcons, {GlassIconsItem} from "@/components/glass-icons";
 import {useQueryState} from "nuqs";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog";
+import React from "react";
 
 interface GlassIconsSectionProps {
     items: GlassIconsItem[];
 }
 
-interface DialogContent {
+interface DialogContentData {
     title: string;
     description: string;
     details: string;
+    video: string;
 }
 
 type MechanicType = "combat" | "survival" | "extraction" | "baseManagement";
 
-const contentMapping: Record<MechanicType, DialogContent> = {
+const contentMapping: Record<MechanicType, DialogContentData> = {
 
     combat: {
 
@@ -28,11 +37,13 @@ const contentMapping: Record<MechanicType, DialogContent> = {
         cada uma com vantagens e riscos diferentes.
         
         Ataques corpo a corpo economizam munição, mas exigem proximidade e precisão. 
-        Armas de fogo oferecem controle de área e dano rápido, porém fazem barulho — atraindo mais ameaças.
+        Armas de fogo oferecem controle de área e dano rápido, porém fazem barulho, atraindo mais ameaças.
         
         O posicionamento, gerenciamento de stamina e escolha do equipamento certo 
         definem se você sobrevive ou vira mais um corpo no mapa.
-        `
+        `,
+
+        video: "combat_video.mp4"
     },
 
     survival: {
@@ -50,7 +61,9 @@ const contentMapping: Record<MechanicType, DialogContent> = {
         
         Crafting permite transformar recursos encontrados em ferramentas, 
         consumíveis e melhorias essenciais para continuar explorando.
-        `
+        `,
+
+        video: "survival_video.mp4"
     },
 
     extraction: {
@@ -63,12 +76,11 @@ const contentMapping: Record<MechanicType, DialogContent> = {
         As missões seguem o estilo extração: você entra no mapa para coletar recursos valiosos 
         e precisa alcançar uma zona de saída para manter tudo o que conseguiu.
         
-        Zonas de extração podem exigir tempo de espera, ativação ou condições específicas — 
-        criando momentos de alta tensão.
-        
-        Morrer antes de extrair significa perder parte significativa do loot, 
+        Morrer antes de extrair significa perder loot, 
         tornando cada decisão dentro da missão ainda mais arriscada.
-        `
+        `,
+
+        video: "extraction_video.mp4"
     },
 
     baseManagement: {
@@ -78,7 +90,7 @@ const contentMapping: Record<MechanicType, DialogContent> = {
         description: "Expanda, fortaleça e administre sua zona segura.",
 
         details: `
-        A base é sua zona segura — o único local livre de ameaças diretas.
+        A base é sua zona segura, o único local livre de ameaças diretas.
         
         Aqui você constrói mobílias, instala estações de crafting, 
         organiza armazenamento e fortalece suas defesas.
@@ -87,7 +99,9 @@ const contentMapping: Record<MechanicType, DialogContent> = {
         como produção de recursos, suporte de NPCs e preparação avançada para expedições.
         
         Uma base bem administrada aumenta drasticamente suas chances de sobreviver a longo prazo.
-        `
+        `,
+
+        video: "base_video.mp4"
     }
 
 };
@@ -115,7 +129,30 @@ export default function GlassIconsSection({items}: GlassIconsSectionProps) {
                 className="max-w-2xl"
             />
 
-            {/*TODO adicionar dialog*/}
+            <Dialog open={!!selectedMechanic} onOpenChange={handleOpenChange}>
+                <DialogContent>
+                    {content && (
+                        <DialogHeader>
+                            <DialogTitle>{content.title}</DialogTitle>
+                            <DialogDescription>{content.description}</DialogDescription>
+                        </DialogHeader>
+                    )}
+                    {content && (
+                        <video
+                            src={'/videos/' + content.video}
+                            controls
+                            autoPlay
+                            muted
+                            className="w-full rounded-lg"
+                        />
+                    )}
+                    {content && (
+                        <div className="text-sm text-foreground whitespace-pre-line">
+                            {content.details.trim()}
+                        </div>
+                    )}
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }
