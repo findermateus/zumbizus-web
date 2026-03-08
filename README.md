@@ -4,12 +4,12 @@ Este projeto consiste no site de divulgação do jogo Zumbizus, desenvolvido com
 
 ## Tecnologias Utilizadas
 
-* Framework: Next.js (App Router)
-* Linguagem: TypeScript
-* UI/Styling: Tailwind CSS + Shadcn/UI
-* State Management: Nuqs (Query Parameters)
-* Banco de Dados: MariaDB (Executado via Docker)
-* Licença: MIT
+- Framework: Next.js (App Router)
+- Linguagem: TypeScript
+- UI/Styling: Tailwind CSS + Shadcn/UI
+- State Management: Nuqs (Query Parameters)
+- Banco de Dados: MariaDB (Executado via Docker)
+- Licença: MIT
 
 ## Requisitos Prévios
 
@@ -23,3 +23,4 @@ Certifique-se de que o container Docker com o MariaDB esteja ativo antes de inic
 
 ```bash
 docker-compose up -d
+```
