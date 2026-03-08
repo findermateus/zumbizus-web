@@ -169,6 +169,17 @@
     --tracking-wide: calc(var(--tracking-normal) + 0.025em);
     --tracking-wider: calc(var(--tracking-normal) + 0.05em);
     --tracking-widest: calc(var(--tracking-normal) + 0.1em);
+
+    --animate-shimmer: shimmer 2s linear infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 200% center;
+    }
+    100% {
+        background-position: -200% center;
+    }
 }
 
 @layer base {
@@ -206,14 +217,5 @@
     * {
         scrollbar-width: thin;
         scrollbar-color: var(--border) transparent;
-    }
-}
-
-@keyframes shimmer {
-    0% {
-        background-position: 200% center;
-    }
-    100% {
-        background-position: -200% center;
     }
 }

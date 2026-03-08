@@ -5,6 +5,7 @@ import Footer from "@/components/footer";
 import Header from "@/components/header";
 import {NuqsAdapter} from "nuqs/adapters/next";
 import {Suspense} from "react";
+import TargetCursorWrapper from "@/components/target-cursor-wrapper";
 
 export const metadata: Metadata = {
     title: "Zumbizus",
@@ -30,6 +31,7 @@ export default function RootLayout({
                 >
                     <Header/>
                     {children}
+                    <TargetCursorWrapper/>
                     <Footer/>
                 </ThemeProvider>
             </Suspense>

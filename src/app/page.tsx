@@ -1,15 +1,13 @@
-"use client";
-
 import Carousel, {CarouselItem} from "@/components/carousel";
 import {Building2, Crosshair, Flashlight, Hammer, Heart, PackageOpen, Swords, User} from "lucide-react";
 import {Separator} from "@/components/ui/separator";
 import {Button} from "@/components/ui/button";
-import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
-import GlareHover from "@/components/glare-hover";
+import {CardContent, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import {GlassIconsItem} from "@/components/glass-icons";
 import Link from "next/link";
 import GlassIconsSection from "@/components/glass-icons-section";
-import TargetCursorWrapper from "@/components/target-cursor-wrapper";
+import {DialogContentData} from "@/components/glass-icons-section";
+import GlareCard from "@/components/glare-card";
 
 const carouselItems: CarouselItem[] = [
     {
@@ -62,17 +60,98 @@ const glassIconsItems: GlassIconsItem[] = [
     }
 ];
 
+const contentMapping: Record<string, DialogContentData> = {
+
+    combat: {
+
+        title: "Combate",
+
+        description: "Enfrente zumbis em combates corpo a corpo e tiroteios táticos.",
+
+        details: `
+        O combate em Zumbizus é brutal e estratégico. Você pode alternar entre armas brancas e armas de fogo, 
+        cada uma com vantagens e riscos diferentes.
+        
+        Ataques corpo a corpo economizam munição, mas exigem proximidade e precisão. 
+        Armas de fogo oferecem controle de área e dano rápido, porém fazem barulho, atraindo mais ameaças.
+        
+        O posicionamento, gerenciamento de stamina e escolha do equipamento certo 
+        definem se você sobrevive ou vira mais um corpo no mapa.
+        `,
+
+        video: "combat_video.mp4"
+    },
+
+    survival: {
+
+        title: "Sobrevivência",
+
+        description: "Gerencie fome, sede e recursos em um mundo hostil.",
+
+        details: `
+        Sobreviver vai além de matar zumbis. Você precisa manter seus níveis de fome e sede sob controle, 
+        coletar suprimentos e decidir o que vale a pena carregar.
+        
+        Cada expedição exige planejamento: espaço no inventário é limitado, 
+        e cada item pode significar vida ou morte.
+        
+        Crafting permite transformar recursos encontrados em ferramentas, 
+        consumíveis e melhorias essenciais para continuar explorando.
+        `,
+
+        video: "survival_video.mp4"
+    },
+
+    extraction: {
+
+        title: "Extração",
+
+        description: "Entre, saqueie e escape antes que seja tarde.",
+
+        details: `
+        As missões seguem o estilo extração: você entra no mapa para coletar recursos valiosos 
+        e precisa alcançar uma zona de saída para manter tudo o que conseguiu.
+        
+        Morrer antes de extrair significa perder loot, 
+        tornando cada decisão dentro da missão ainda mais arriscada.
+        `,
+
+        video: "extraction_video.mp4"
+    },
+
+    baseManagement: {
+
+        title: "Gestão de Base",
+
+        description: "Expanda, fortaleça e administre sua zona segura.",
+
+        details: `
+        A base é sua zona segura, o único local livre de ameaças diretas.
+        
+        Aqui você constrói mobílias, instala estações de crafting, 
+        organiza armazenamento e fortalece suas defesas.
+        
+        Melhorias estruturais liberam novas possibilidades estratégicas, 
+        como produção de recursos, suporte de NPCs e preparação avançada para expedições.
+        
+        Uma base bem administrada aumenta drasticamente suas chances de sobreviver a longo prazo.
+        `,
+
+        video: "base_video.mp4"
+    }
+
+};
+
 export default function Home() {
     return (
         <div className="min-h-screen bg-background">
-            <TargetCursorWrapper/>
             <main className="container mx-auto px-4 py-24">
                 <div className="mx-auto max-w-6xl">
                     <div className="text-center mb-16">
                         <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
                             Bem-vindo ao {" "}
                             <span
-                                className="text-primary inline-block bg-gradient-to-r from-primary via-white to-primary bg-[length:200%_100%] bg-clip-text text-transparent animate-[shimmer_2s_linear_infinite]">
+                                className="text-primary inline-block bg-gradient-to-r from-primary via-white to-primary bg-[length:200%_100%] bg-clip-text text-transparent animate-shimmer">
                               Zumbizus
                             </span>
                         </h1>
@@ -117,40 +196,30 @@ export default function Home() {
                             </h2>
                         </div>
 
-                        <GlareHover
-                            width="100%"
-                            height="auto"
-                            background="hsl(var(--card))"
-                            borderRadius="12px"
-                            glareColor="#1f8e00"
-                            glareOpacity={0.3}
-                            className="border"
-                        >
-                            <Card className="border-0 shadow-none bg-transparent w-full">
-                                <CardHeader className="text-center">
-                                    <CardTitle className="text-xl">Criação de Personagem</CardTitle>
-                                </CardHeader>
-                                <CardContent>
-                                    <p className="text-muted-foreground text-center leading-relaxed">
-                                        Crie seu próprio personagem e eternize sua presença no mundo de Zumbizus.
-                                        Apoie o projeto e transforme-se em um NPC dentro do jogo com nome, aparência e
-                                        papel únicos!
-                                    </p>
-                                </CardContent>
-                                <CardFooter className="justify-center">
-                                    <Link href="/character">
-                                        <Button className="cursor-target" size="lg">
-                                            Participe
-                                        </Button>
-                                    </Link>
-                                </CardFooter>
-                            </Card>
-                        </GlareHover>
+                        <GlareCard>
+                            <CardHeader className="text-center">
+                                <CardTitle className="text-xl">Criação de Personagem</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <p className="text-muted-foreground text-center leading-relaxed">
+                                    Crie seu próprio personagem e eternize sua presença no mundo de Zumbizus.
+                                    Apoie o projeto e transforme-se em um NPC dentro do jogo com nome, aparência e
+                                    papel únicos!
+                                </p>
+                            </CardContent>
+                            <CardFooter className="justify-center">
+                                <Link href="/character">
+                                    <Button className="cursor-target" size="lg">
+                                        Participe
+                                    </Button>
+                                </Link>
+                            </CardFooter>
+                        </GlareCard>
                     </div>
 
                     <Separator className="my-16"/>
 
-                    <GlassIconsSection items={glassIconsItems}/>
+                    <GlassIconsSection items={glassIconsItems} contentMapping={contentMapping}/>
                 </div>
             </main>
         </div>
