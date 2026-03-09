@@ -19,7 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" suppressHydrationWarning>
-      <body className="antialiased">
+      <body className="antialiased min-h-screen flex flex-col">
         <NuqsAdapter>
           <Suspense fallback={<></>}>
             <ThemeProvider
@@ -30,7 +30,9 @@ export default function RootLayout({
               disableTransitionOnChange
             >
               <Header />
-              {children}
+              <main className="flex-1">
+                {children}
+              </main>
               <TargetCursorWrapper />
               <Footer />
             </ThemeProvider>
