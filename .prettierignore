@@ -1,5 +1,6 @@
 node_modules
 
+mariadb-data
 .next
 out
 build
@@ -21,4 +22,4 @@ package-lock.json
 yarn.lock
 pnpm-lock.yaml
 
-public/
+public

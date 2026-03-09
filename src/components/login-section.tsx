@@ -31,7 +31,7 @@ export default function LoginSection() {
           />
         </div>
         <CardHeader className="text-center">
-          <CardTitle className="text-xl">Acessar seu NPC</CardTitle>
+          <CardTitle className="text-xl">Acessar seu Personagem</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-3">
           {providers.map((provider) => (
