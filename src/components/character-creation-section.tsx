@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Gender, HairOption } from "@/generated/prisma/enums";
 import Stepper, { Step } from "@/components/stepper";
 import { Button } from "@/components/ui/button";
-import {Npc, NpcRejection} from "@/generated/prisma/client";
+import { Npc, NpcRejection } from "@/generated/prisma/client";
 
 interface CharacterCreationSectionProps {
   npc: (Npc & { npcRejections: NpcRejection[] }) | null;
@@ -44,7 +44,6 @@ const HAIR_COLORS = [
 ] as const;
 
 const HAIR_OPTIONS: { label: string; value: HairOption }[] = [
-  { label: "Nenhum", value: HairOption.none },
   { label: "Careca", value: HairOption.bald },
   { label: "Raspado", value: HairOption.buzzCut },
   { label: "Topete", value: HairOption.quiff },
@@ -63,26 +62,15 @@ const HAIR_OPTIONS: { label: string; value: HairOption }[] = [
 ];
 
 export default function CharacterCreationSection({ npc }: CharacterCreationSectionProps) {
+  const [selectedGender, setSelectedGender] = useState<Gender>(() => npc?.gender ?? Gender.male);
 
-  const [selectedGender, setSelectedGender] = useState<Gender>(() =>
-      npc?.gender ?? Gender.male
-  );
+  const [selectedSkinColor, setSelectedSkinColor] = useState<string>(() => npc?.skinColor ?? SKIN_COLORS[0].value);
 
-  const [selectedSkinColor, setSelectedSkinColor] = useState<string>(() =>
-      npc?.skinColor ?? SKIN_COLORS[0].value
-  );
+  const [selectedHairOption, setSelectedHairOption] = useState<HairOption>(() => npc?.hairOption ?? HairOption.none);
 
-  const [selectedHairOption, setSelectedHairOption] = useState<HairOption>(() =>
-      npc?.hairOption ?? HairOption.none
-  );
+  const [selectedHairColor, setSelectedHairColor] = useState<string>(() => npc?.hairColor ?? HAIR_COLORS[0].value);
 
-  const [selectedHairColor, setSelectedHairColor] = useState<string>(() =>
-      npc?.hairColor ?? HAIR_COLORS[0].value
-  );
-
-  const [characterName, setCharacterName] = useState<string>(() =>
-      npc?.name ?? ""
-  );
+  const [characterName, setCharacterName] = useState<string>(() => npc?.name ?? "");
 
   const [isCompleted, setIsCompleted] = useState<boolean>(() => npc !== null);
   const [stepperKey, setStepperKey] = useState<number>(0);
@@ -111,22 +99,16 @@ export default function CharacterCreationSection({ npc }: CharacterCreationSecti
   };
 
   return (
-    <div className="w-full max-w-2xl py-16 my-16">
+    <div className="w-full max-w-2xl bg-red">
       {isCompleted ? (
         <div className="flex flex-col gap-8 p-8 rounded-4xl border border-border bg-card/50 shadow-xl">
           <div className="flex flex-col gap-2 text-center">
-            <h2 className="text-2xl font-bold text-foreground">
-              Personagem Criado!
-            </h2>
-            <p className="text-sm text-muted-foreground">
-              Confira os detalhes do seu personagem abaixo
-            </p>
+            <h2 className="text-2xl font-bold text-foreground">Personagem Criado!</h2>
+            <p className="text-sm text-muted-foreground">Confira os detalhes do seu personagem abaixo</p>
           </div>
 
           <div className="text-center">
-            <span className="text-3xl font-bold text-primary">
-              {characterName || "Sem nome"}
-            </span>
+            <span className="text-3xl font-bold text-primary">{characterName || "Sem nome"}</span>
           </div>
 
           <div className="flex flex-col gap-4 p-4 rounded-lg border border-border bg-card">
@@ -172,11 +154,7 @@ export default function CharacterCreationSection({ npc }: CharacterCreationSecti
               </div>
             </div>
           </div>
-          <Button
-            onClick={handleEdit}
-            variant="outline"
-            className="cursor-target w-full"
-          >
+          <Button onClick={handleEdit} variant="outline" className="cursor-target w-full">
             Editar Personagem
           </Button>
         </div>
@@ -189,18 +167,17 @@ export default function CharacterCreationSection({ npc }: CharacterCreationSecti
           backButtonText="Voltar"
           nextButtonText="Continuar"
           disableNext={shouldDisableNext}
+          className={"bg-background"}
         >
-        <Step>
-          <div className="flex flex-col gap-4">
-            <h2 className="text-xl font-semibold text-foreground text-center">
-              Escolha seu Gênero
-            </h2>
-            <div className="flex flex-wrap justify-center gap-3">
-              {GENDER_OPTIONS.map((option) => (
-                <button
-                  key={option.value}
-                  onClick={() => setSelectedGender(option.value)}
-                  className={`
+          <Step>
+            <div className="flex flex-col gap-4">
+              <h2 className="text-xl font-semibold text-foreground text-center">Escolha seu Gênero</h2>
+              <div className="flex flex-wrap justify-center gap-3">
+                {GENDER_OPTIONS.map((option) => (
+                  <button
+                    key={option.value}
+                    onClick={() => setSelectedGender(option.value)}
+                    className={`
                     cursor-target flex items-center gap-2 px-6 py-4 rounded-lg border text-sm font-medium
                     transition-all cursor-pointer
                     ${
@@ -209,86 +186,24 @@ export default function CharacterCreationSection({ npc }: CharacterCreationSecti
                         : "border-border bg-card text-muted-foreground hover:border-primary/50 hover:text-foreground"
                     }
                   `}
-                >
-                  <span className="text-2xl">{option.icon}</span>
-                  {option.label}
-                </button>
-              ))}
-            </div>
-          </div>
-        </Step>
-
-        <Step>
-          <div className="flex flex-col gap-6">
-            <h2 className="text-xl font-semibold text-foreground text-center">
-              Escolha seu Cabelo
-            </h2>
-
-            <div className="flex flex-col gap-3">
-              <h3 className="text-sm font-medium text-muted-foreground">Estilo</h3>
-              <div className="flex flex-wrap justify-center gap-2 max-h-40 overflow-y-auto">
-                {HAIR_OPTIONS.map((option) => (
-                  <button
-                    key={option.value}
-                    onClick={() => setSelectedHairOption(option.value)}
-                    className={`
-                      cursor-target px-3 py-2 rounded-lg border text-xs font-medium
-                      transition-all cursor-pointer
-                      ${
-                        selectedHairOption === option.value
-                          ? "border-primary bg-primary/10 text-primary shadow-sm"
-                          : "border-border bg-card text-muted-foreground hover:border-primary/50 hover:text-foreground"
-                      }
-                    `}
                   >
+                    <span className="text-2xl">{option.icon}</span>
                     {option.label}
                   </button>
                 ))}
               </div>
             </div>
-
-            {needsHairColor && (
-              <div className="flex flex-col gap-3">
-                <h3 className="text-sm font-medium text-muted-foreground">Cor do Cabelo</h3>
-                <div className="flex flex-wrap justify-center gap-2">
-                  {HAIR_COLORS.map((color) => (
-                    <button
-                      key={color.value}
-                      onClick={() => setSelectedHairColor(color.value)}
-                      title={color.name}
-                      className={`
-                        cursor-target w-8 h-8 rounded-full border-2 transition-all cursor-pointer
-                        hover:scale-110 hover:shadow-md
-                        ${
-                          selectedHairColor === color.value
-                            ? "border-primary ring-2 ring-primary/40 scale-110"
-                            : "border-border"
-                        }
-                      `}
-                      style={{ backgroundColor: color.value }}
-                    />
-                  ))}
-                </div>
-                <p className="text-xs text-muted-foreground text-center">
-                  {HAIR_COLORS.find((c) => c.value === selectedHairColor)?.name}
-                </p>
-              </div>
-            )}
-          </div>
-        </Step>
-
-        <Step>
-          <div className="flex flex-col gap-4">
-            <h2 className="text-xl font-semibold text-foreground text-center">
-              Escolha sua Cor de Pele
-            </h2>
-            <div className="flex flex-wrap justify-center gap-3">
-              {SKIN_COLORS.map((color) => (
-                <button
-                  key={color.value}
-                  onClick={() => setSelectedSkinColor(color.value)}
-                  title={color.name}
-                  className={`
+          </Step>
+          <Step>
+            <div className="flex flex-col gap-4">
+              <h2 className="text-xl font-semibold text-foreground text-center">Escolha sua Cor de Pele</h2>
+              <div className="flex flex-wrap justify-center gap-3">
+                {SKIN_COLORS.map((color) => (
+                  <button
+                    key={color.value}
+                    onClick={() => setSelectedSkinColor(color.value)}
+                    title={color.name}
+                    className={`
                     cursor-target w-12 h-12 rounded-full border-2 transition-all cursor-pointer
                     hover:scale-110 hover:shadow-md
                     ${
@@ -297,85 +212,134 @@ export default function CharacterCreationSection({ npc }: CharacterCreationSecti
                         : "border-border"
                     }
                   `}
-                  style={{ backgroundColor: color.value }}
-                />
-              ))}
-            </div>
-            <p className="text-sm text-muted-foreground text-center">
-              {SKIN_COLORS.find((c) => c.value === selectedSkinColor)?.name}
-            </p>
-          </div>
-        </Step>
-
-        <Step>
-          <div className="flex flex-col gap-6">
-            <h2 className="text-xl font-semibold text-foreground text-center">
-              Resumo do Personagem
-            </h2>
-
-            <div className="flex flex-col gap-2">
-              <label htmlFor="character-name" className="text-sm font-medium text-muted-foreground">
-                Nome do Personagem
-              </label>
-              <input
-                id="character-name"
-                type="text"
-                value={characterName}
-                onChange={(e) => setCharacterName(e.target.value)}
-                placeholder="Digite o nome do seu personagem"
-                className="cursor-target w-full px-4 py-3 rounded-lg border border-border bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all"
-              />
-            </div>
-
-            <div className="flex flex-col gap-4 p-4 rounded-lg border border-border bg-card/50">
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-muted-foreground">Gênero</span>
-                <span className="text-sm font-medium text-foreground">
-                  {GENDER_OPTIONS.find((g) => g.value === selectedGender)?.label}
-                </span>
+                    style={{ backgroundColor: color.value }}
+                  />
+                ))}
               </div>
+              <p className="text-sm text-muted-foreground text-center">
+                {SKIN_COLORS.find((c) => c.value === selectedSkinColor)?.name}
+              </p>
+            </div>
+          </Step>
+          <Step>
+            <div className="flex flex-col gap-6">
+              <h2 className="text-xl font-semibold text-foreground text-center">Escolha seu Cabelo</h2>
 
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-muted-foreground">Cabelo</span>
-                <span className="text-sm font-medium text-foreground">
-                  {HAIR_OPTIONS.find((h) => h.value === selectedHairOption)?.label}
-                </span>
+              <div className="flex flex-col gap-3">
+                <div className="flex flex-wrap justify-center gap-2 max-h-40 overflow-y-auto">
+                  {HAIR_OPTIONS.map((option) => (
+                    <button
+                      key={option.value}
+                      onClick={() => setSelectedHairOption(option.value)}
+                      className={`
+                      cursor-target px-3 py-2 rounded-lg border text-xs font-medium
+                      transition-all cursor-pointer
+                      ${
+                        selectedHairOption === option.value
+                          ? "border-primary bg-primary/10 text-primary shadow-sm"
+                          : "border-border bg-card text-muted-foreground hover:border-primary/50 hover:text-foreground"
+                      }
+                    `}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
               </div>
 
               {needsHairColor && (
+                <div className="flex flex-col gap-3">
+                  <div className="flex flex-wrap justify-center gap-2">
+                    {HAIR_COLORS.map((color) => (
+                      <button
+                        key={color.value}
+                        onClick={() => setSelectedHairColor(color.value)}
+                        title={color.name}
+                        className={`
+                        cursor-target w-8 h-8 rounded-full border-2 transition-all cursor-pointer
+                        hover:scale-110 hover:shadow-md
+                        ${
+                          selectedHairColor === color.value
+                            ? "border-primary ring-2 ring-primary/40 scale-110"
+                            : "border-border"
+                        }
+                      `}
+                        style={{ backgroundColor: color.value }}
+                      />
+                    ))}
+                  </div>
+                  <p className="text-xs text-muted-foreground text-center">
+                    {HAIR_COLORS.find((c) => c.value === selectedHairColor)?.name}
+                  </p>
+                </div>
+              )}
+            </div>
+          </Step>
+          <Step>
+            <div className="flex flex-col gap-6">
+              <h2 className="text-xl font-semibold text-foreground text-center">Resumo do Personagem</h2>
+
+              <div className="flex flex-col gap-2">
+                <label htmlFor="character-name" className="text-sm font-medium text-muted-foreground">
+                  Nome do Personagem
+                </label>
+                <input
+                  id="character-name"
+                  type="text"
+                  value={characterName}
+                  onChange={(e) => setCharacterName(e.target.value)}
+                  placeholder="Digite o nome do seu personagem"
+                  className="cursor-target w-full px-4 py-3 rounded-lg border border-border bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all"
+                />
+              </div>
+
+              <div className="flex flex-col gap-4 p-4 rounded-lg border border-border bg-card/50">
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">Cor do Cabelo</span>
+                  <span className="text-sm text-muted-foreground">Gênero</span>
+                  <span className="text-sm font-medium text-foreground">
+                    {GENDER_OPTIONS.find((g) => g.value === selectedGender)?.label}
+                  </span>
+                </div>
+
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-muted-foreground">Cabelo</span>
+                  <span className="text-sm font-medium text-foreground">
+                    {HAIR_OPTIONS.find((h) => h.value === selectedHairOption)?.label}
+                  </span>
+                </div>
+
+                {needsHairColor && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-muted-foreground">Cor do Cabelo</span>
+                    <div className="flex items-center gap-2">
+                      <div
+                        className="w-5 h-5 rounded-full border border-border"
+                        style={{ backgroundColor: selectedHairColor }}
+                      />
+                      <span className="text-sm font-medium text-foreground">
+                        {HAIR_COLORS.find((c) => c.value === selectedHairColor)?.name}
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-muted-foreground">Cor de Pele</span>
                   <div className="flex items-center gap-2">
                     <div
                       className="w-5 h-5 rounded-full border border-border"
-                      style={{ backgroundColor: selectedHairColor }}
+                      style={{ backgroundColor: selectedSkinColor }}
                     />
                     <span className="text-sm font-medium text-foreground">
-                      {HAIR_COLORS.find((c) => c.value === selectedHairColor)?.name}
+                      {SKIN_COLORS.find((c) => c.value === selectedSkinColor)?.name}
                     </span>
                   </div>
                 </div>
-              )}
-
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-muted-foreground">Cor de Pele</span>
-                <div className="flex items-center gap-2">
-                  <div
-                    className="w-5 h-5 rounded-full border border-border"
-                    style={{ backgroundColor: selectedSkinColor }}
-                  />
-                  <span className="text-sm font-medium text-foreground">
-                    {SKIN_COLORS.find((c) => c.value === selectedSkinColor)?.name}
-                  </span>
-                </div>
               </div>
-            </div>
 
-            <p className="text-xs text-muted-foreground text-center">
-              Confirme seu personagem
-            </p>
-          </div>
-        </Step>
+              <p className="text-xs text-muted-foreground text-center">Confirme seu personagem</p>
+            </div>
+          </Step>
         </Stepper>
       )}
     </div>

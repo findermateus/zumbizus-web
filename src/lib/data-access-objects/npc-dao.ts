@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import {Prisma} from "@/generated/prisma/client";
+import { Prisma } from "@/generated/prisma/client";
 
 type NpcWithRejections = Prisma.NpcGetPayload<{
   include: { npcRejections: true };
@@ -16,10 +16,6 @@ export default class NpcDAO {
       },
     });
 
-    if (!npc) {
-      return null;
-    }
-
-    return npc;
+    return npc ? npc : null;
   }
 }

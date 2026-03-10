@@ -1,7 +1,6 @@
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
-import LoadUser from "@/lib/cases/load-user";
-import UserDAO from "@/lib/data-access-objects/user-dao";
+import { loadUser } from "@/lib/user";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   secret: process.env.BETTER_AUTH_SECRET,
@@ -9,10 +8,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Google({
       async profile(profile) {
-        const userDAO = new UserDAO();
-        const loadUser = new LoadUser(userDAO);
-
-        const user = await loadUser.execute(profile.email, "google");
+        const user = await loadUser(profile.email, "google");
 
         return {
           ...profile,
