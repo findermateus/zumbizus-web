@@ -1,29 +1,29 @@
 "use client";
 
 import { useState } from "react";
-import { Gender, HairOption } from "@/generated/prisma/enums";
 import Stepper, { Step } from "@/components/stepper";
 import { Button } from "@/components/ui/button";
-import { Npc, NpcRejection } from "@/generated/prisma/client";
+import type { HairOption, Gender } from "@/types/npc.types";
+import { NpcWithRejections, SkinColor } from "@/types/npc.types";
 
 interface CharacterCreationSectionProps {
-  npc: (Npc & { npcRejections: NpcRejection[] }) | null;
+  npc: NpcWithRejections | null;
 }
 
-const SKIN_COLORS = [
-  { name: "Claro", value: "#FDDCB5" },
-  { name: "Pêssego", value: "#F5C5A3" },
-  { name: "Bege", value: "#E8B48A" },
-  { name: "Moreno", value: "#C68C5B" },
-  { name: "Castanho", value: "#A0673C" },
-  { name: "Escuro", value: "#6B3F23" },
-  { name: "Ébano", value: "#3B2212" },
-] as const;
+export const SkinColorLabel: Record<SkinColor, string> = {
+  [SkinColor.CLARO]: "Claro",
+  [SkinColor.PESSEGO]: "Pêssego",
+  [SkinColor.BEGE]: "Bege",
+  [SkinColor.MORENO]: "Moreno",
+  [SkinColor.CASTANHO]: "Castanho",
+  [SkinColor.ESCURO]: "Escuro",
+  [SkinColor.EBANO]: "Ébano",
+};
 
 const GENDER_OPTIONS = [
-  { label: "Masculino", value: Gender.male, icon: "♂" },
-  { label: "Feminino", value: Gender.female, icon: "♀" },
-  { label: "Outro", value: Gender.other, icon: "⚧" },
+  { label: "Masculino", value: "male", icon: "♂" },
+  { label: "Feminino", value: "female", icon: "♀" },
+  { label: "Outro", value: "other", icon: "⚧" },
 ] as const;
 
 const HAIR_COLORS = [
@@ -44,29 +44,29 @@ const HAIR_COLORS = [
 ] as const;
 
 const HAIR_OPTIONS: { label: string; value: HairOption }[] = [
-  { label: "Careca", value: HairOption.bald },
-  { label: "Raspado", value: HairOption.buzzCut },
-  { label: "Topete", value: HairOption.quiff },
-  { label: "Chanel", value: HairOption.bobCut },
-  { label: "Liso Curto", value: HairOption.shortStraight },
-  { label: "Liso Longo", value: HairOption.longStraight },
-  { label: "Ondulado Curto", value: HairOption.shortWavy },
-  { label: "Ondulado Longo", value: HairOption.longWavy },
-  { label: "Cacheado Curto", value: HairOption.shortCurly },
-  { label: "Cacheado Longo", value: HairOption.longCurly },
-  { label: "Afro", value: HairOption.afro },
-  { label: "Rabo de Cavalo", value: HairOption.ponytail },
-  { label: "Tranças", value: HairOption.braids },
-  { label: "Dreads", value: HairOption.dreadlocks },
-  { label: "Moicano", value: HairOption.mohawk },
+  { label: "Careca", value: "bald" },
+  { label: "Raspado", value: "buzzCut" },
+  { label: "Topete", value: "quiff" },
+  { label: "Chanel", value: "bobCut" },
+  { label: "Liso Curto", value: "shortStraight" },
+  { label: "Liso Longo", value: "longStraight" },
+  { label: "Ondulado Curto", value: "shortWavy" },
+  { label: "Ondulado Longo", value: "longWavy" },
+  { label: "Cacheado Curto", value: "shortCurly" },
+  { label: "Cacheado Longo", value: "longCurly" },
+  { label: "Afro", value: "afro" },
+  { label: "Rabo de Cavalo", value: "ponytail" },
+  { label: "Tranças", value: "braids" },
+  { label: "Dreads", value: "dreadlocks" },
+  { label: "Moicano", value: "mohawk" },
 ];
 
 export default function CharacterCreationSection({ npc }: CharacterCreationSectionProps) {
-  const [selectedGender, setSelectedGender] = useState<Gender>(() => npc?.gender ?? Gender.male);
+  const [selectedGender, setSelectedGender] = useState<Gender>(() => npc?.gender ?? "male");
 
-  const [selectedSkinColor, setSelectedSkinColor] = useState<string>(() => npc?.skinColor ?? SKIN_COLORS[0].value);
+  const [selectedSkinColor, setSelectedSkinColor] = useState<string>(() => npc?.skinColor ?? SkinColor.CLARO);
 
-  const [selectedHairOption, setSelectedHairOption] = useState<HairOption>(() => npc?.hairOption ?? HairOption.none);
+  const [selectedHairOption, setSelectedHairOption] = useState<HairOption>(() => npc?.hairOption ?? "none");
 
   const [selectedHairColor, setSelectedHairColor] = useState<string>(() => npc?.hairColor ?? HAIR_COLORS[0].value);
 
@@ -76,7 +76,7 @@ export default function CharacterCreationSection({ npc }: CharacterCreationSecti
   const [stepperKey, setStepperKey] = useState<number>(0);
   const [currentStep, setCurrentStep] = useState<number>(1);
 
-  const needsHairColor = selectedHairOption !== HairOption.none && selectedHairOption !== HairOption.bald;
+  const needsHairColor = selectedHairOption !== "none" && selectedHairOption !== "bald";
   const isLastStep = currentStep === 4;
   const isNameEmpty = characterName.trim() === "";
   const shouldDisableNext = isLastStep && isNameEmpty;
@@ -149,7 +149,7 @@ export default function CharacterCreationSection({ npc }: CharacterCreationSecti
                   style={{ backgroundColor: selectedSkinColor }}
                 />
                 <span className="text-sm font-medium text-foreground">
-                  {SKIN_COLORS.find((c) => c.value === selectedSkinColor)?.name}
+                  {SkinColorLabel[selectedSkinColor as SkinColor]}
                 </span>
               </div>
             </div>
@@ -198,26 +198,22 @@ export default function CharacterCreationSection({ npc }: CharacterCreationSecti
             <div className="flex flex-col gap-4">
               <h2 className="text-xl font-semibold text-foreground text-center">Escolha sua Cor de Pele</h2>
               <div className="flex flex-wrap justify-center gap-3">
-                {SKIN_COLORS.map((color) => (
+                {Object.values(SkinColor).map((color) => (
                   <button
-                    key={color.value}
-                    onClick={() => setSelectedSkinColor(color.value)}
-                    title={color.name}
+                    key={color}
+                    onClick={() => setSelectedSkinColor(color)}
+                    title={SkinColorLabel[color]}
                     className={`
-                    cursor-target w-12 h-12 rounded-full border-2 transition-all cursor-pointer
-                    hover:scale-110 hover:shadow-md
-                    ${
-                      selectedSkinColor === color.value
-                        ? "border-primary ring-2 ring-primary/40 scale-110"
-                        : "border-border"
-                    }
-                  `}
-                    style={{ backgroundColor: color.value }}
+                      cursor-target w-12 h-12 rounded-full border-2 transition-all cursor-pointer
+                      hover:scale-110 hover:shadow-md
+                      ${selectedSkinColor === color ? "border-primary ring-2 ring-primary/40 scale-110" : "border-border"}
+                    `}
+                    style={{ backgroundColor: color }}
                   />
                 ))}
               </div>
               <p className="text-sm text-muted-foreground text-center">
-                {SKIN_COLORS.find((c) => c.value === selectedSkinColor)?.name}
+                {SkinColorLabel[selectedSkinColor as SkinColor]}
               </p>
             </div>
           </Step>
@@ -331,7 +327,7 @@ export default function CharacterCreationSection({ npc }: CharacterCreationSecti
                       style={{ backgroundColor: selectedSkinColor }}
                     />
                     <span className="text-sm font-medium text-foreground">
-                      {SKIN_COLORS.find((c) => c.value === selectedSkinColor)?.name}
+                      {SkinColorLabel[selectedSkinColor as SkinColor]}
                     </span>
                   </div>
                 </div>
