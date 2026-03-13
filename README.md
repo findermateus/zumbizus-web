@@ -9,7 +9,6 @@ Este projeto consiste no site de divulgação do jogo Zumbizus, desenvolvido com
 - UI/Styling: Tailwind CSS + Shadcn/UI
 - State Management: Nuqs (Query Parameters)
 - Banco de Dados: MariaDB (Executado via Docker)
-- Licença: MIT
 
 ## Requisitos Prévios
 
