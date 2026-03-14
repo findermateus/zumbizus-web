@@ -82,11 +82,11 @@ function CarouselItem({ item, index, itemWidth, round, trackItemOffset, x, trans
   return (
     <motion.div
       key={`${item?.id ?? index}-${index}`}
-      className={`relative shrink-0 flex flex-col ${
+      className={`relative shrink-0 flex flex-col cursor-none ${
         round
           ? "items-center justify-center text-center bg-[#060010] border-0"
           : "items-start justify-end bg-[#222] border border-[#222] rounded-[12px]"
-      } overflow-hidden cursor-grab active:cursor-grabbing`}
+      } overflow-hidden`}
       style={{
         width: itemWidth,
         height: round ? itemWidth : "100%",
@@ -246,7 +246,7 @@ export default function Carousel({
   return (
     <div
       ref={containerRef}
-      className={`relative overflow-hidden p-4 cursor-target ${
+      className={`relative overflow-hidden p-4 cursor-target cursor-none ${
         round ? "rounded-full border border-white" : "rounded-[24px] border border-[#222]"
       }`}
       style={{
@@ -289,7 +289,7 @@ export default function Carousel({
           {items.map((_, index) => (
             <motion.div
               key={index}
-              className={`h-2 w-2 rounded-full cursor-pointer transition-colors duration-150 ${
+              className={`h-2 w-2 rounded-full cursor-none transition-colors duration-150 ${
                 activeIndex === index
                   ? round
                     ? "bg-white"

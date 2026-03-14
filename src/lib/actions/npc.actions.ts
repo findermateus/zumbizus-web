@@ -2,7 +2,6 @@
 
 import { auth } from "@/auth";
 import { Gender, HairOption, SkinColor } from "@/types/npc.types";
-import { NpcException } from "@/lib/exceptions/npc.exceptions";
 import NpcDAO from "@/lib/data-access-objects/npc-dao";
 
 export async function saveNpc(
@@ -11,7 +10,7 @@ export async function saveNpc(
   skinColor: SkinColor,
   hairOption: HairOption,
   hairColor: string
-) {
+): Promise<{ error: string } | { success: boolean }> {
   const session = await auth();
 
   if (!session) {
@@ -19,23 +18,30 @@ export async function saveNpc(
   }
 
   if (!isValidHexColor(hairColor)) {
-    throw new NpcException("Invalid hair color", "INVALID_HAIR_COLOR");
+    return { error: "INVALID_HAIR_COLOR" };
   }
 
   if (characterName.length < 3 || characterName.length > 30) {
-    throw new NpcException("Character name must be between 3 and 30 characters", "INVALID_CHARACTER_NAME");
+    return { error: "INVALID_CHARACTER_NAME" };
   }
 
   const npcDAO = new NpcDAO();
+
+  const npcWithTheSameName = await npcDAO.findByName(characterName);
+
+  if (npcWithTheSameName && npcWithTheSameName.userId !== session.user.userId) {
+    return { error: "CHARACTER_NAME_TAKEN" };
+  }
+
   const npc = await npcDAO.findByUserId(session.user.userId);
 
   if (!npc) {
     await npcDAO.createNpc(session.user.userId, characterName, gender, skinColor, hairOption, hairColor, "pending");
-
-    return;
+  } else {
+    await npcDAO.updateNpc(session.user.userId, characterName, gender, skinColor, hairOption, hairColor, "pending");
   }
 
-  await npcDAO.updateNpc(session.user.userId, characterName, gender, skinColor, hairOption, hairColor, "pending");
+  return { success: true };
 }
 
 function isValidHexColor(str: string) {

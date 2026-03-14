@@ -90,7 +90,7 @@ export default function Home() {
               </CardContent>
               <CardFooter className="justify-center">
                 <Link href="/character">
-                  <Button className="cursor-target" size="lg">
+                  <Button className="cursor-target cursor-none" size="lg">
                     Participe
                   </Button>
                 </Link>

@@ -12,17 +12,20 @@ export default class NpcDAO {
       },
     });
 
-    return !npc
-      ? null
-      : {
-          userId: npc.userId,
-          name: npc.name,
-          gender: npc.gender as Gender,
-          hairColor: npc.hairColor as string,
-          skinColor: npc.skinColor,
-          hairOption: npc.hairOption as HairOption,
-          npcRejections: npc.npcRejections,
-        };
+    return !npc ? null : this.mapNpcToNpcWithRejections(npc);
+  }
+
+  async findByName(name: string): Promise<NpcWithRejections | null> {
+    const npc = await prisma.npc.findFirst({
+      where: {
+        name: name,
+      },
+      include: {
+        npcRejections: true,
+      },
+    });
+
+    return !npc ? null : this.mapNpcToNpcWithRejections(npc);
   }
 
   async createNpc(
@@ -73,5 +76,30 @@ export default class NpcDAO {
         selectedCategory: "",
       },
     });
+  }
+
+  private mapNpcToNpcWithRejections(npc: {
+    userId: number;
+    name: string;
+    gender: string;
+    hairColor: string;
+    skinColor: string;
+    hairOption: string;
+    npcRejections: {
+      id: number;
+      npcId: number;
+      reason: string;
+      rejectedAt: Date;
+    }[];
+  }): NpcWithRejections {
+    return {
+      userId: npc.userId,
+      name: npc.name,
+      gender: npc.gender as Gender,
+      hairColor: npc.hairColor as string,
+      skinColor: npc.skinColor,
+      hairOption: npc.hairOption as HairOption,
+      npcRejections: npc.npcRejections,
+    };
   }
 }

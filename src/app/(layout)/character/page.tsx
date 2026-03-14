@@ -91,7 +91,7 @@ export default async function Page() {
                 return (
                   <li
                     key={rule.id}
-                    className="cursor-target group flex items-start gap-4 p-4 rounded-md border border-border bg-muted/30 hover:border-primary/40 hover:bg-primary/5 transition-colors duration-200 cursor-default"
+                    className="cursor-target group flex items-start gap-4 p-4 rounded-md border border-border bg-muted/30 hover:border-primary/40 hover:bg-primary/5 transition-colors duration-200 cursor-none"
                   >
                     <Icon
                       size={15}
