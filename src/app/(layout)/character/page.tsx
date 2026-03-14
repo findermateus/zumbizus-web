@@ -10,7 +10,6 @@ import { Badge } from "@/components/ui/badge";
 
 async function LoadSection() {
   const session = await auth();
-
   if (!session) {
     return <LoginSection />;
   }

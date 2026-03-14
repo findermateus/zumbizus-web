@@ -1,5 +1,3 @@
-import type { Gender, HairOption } from "@/generated/prisma/enums";
-
 export type Category = "creation" | "production" | "supplies" | "defense" | "commerce";
 
 export interface NpcWithRejections {
@@ -9,7 +7,7 @@ export interface NpcWithRejections {
   hairColor: string;
   skinColor: string;
   hairOption: HairOption;
-  npcRejections: { reason: string, rejectedAt: Date }[];
+  npcRejections: { reason: string; rejectedAt: Date }[];
 }
 
 export enum SkinColor {
@@ -22,4 +20,27 @@ export enum SkinColor {
   EBANO = "#3B2212",
 }
 
-export {Gender, HairOption}
+export enum HairOption {
+  none = "none",
+  bald = "bald",
+  buzzCut = "buzzCut",
+  quiff = "quiff",
+  bobCut = "bobCut",
+  shortStraight = "shortStraight",
+  longStraight = "longStraight",
+  shortWavy = "shortWavy",
+  longWavy = "longWavy",
+  shortCurly = "shortCurly",
+  longCurly = "longCurly",
+  afro = "afro",
+  ponytail = "ponytail",
+  braids = "braids",
+  dreadlocks = "dreadlocks",
+  mohawk = "mohawk",
+}
+
+export enum Gender {
+  male = "male",
+  female = "female",
+  other = "other",
+}
