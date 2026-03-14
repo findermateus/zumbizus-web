@@ -68,7 +68,9 @@ interface CarouselItemProps {
   itemWidth: number;
   round: boolean;
   trackItemOffset: number;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   x: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   transition: any;
 }
 

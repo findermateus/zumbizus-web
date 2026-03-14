@@ -1,5 +1,5 @@
 export class NpcException extends Error {
-  code: string
+  code: string;
 
   constructor(message: string, code: string) {
     super(message);

@@ -12,7 +12,6 @@ interface StepperProps extends HTMLAttributes<HTMLDivElement> {
   contentClassName?: string;
   footerClassName?: string;
   backButtonProps?: React.ButtonHTMLAttributes<HTMLButtonElement>;
-  nextButtonProps?: React.ButtonHTMLAttributes<HTMLButtonElement>;
   backButtonText?: string;
   nextButtonText?: string;
   disableStepIndicators?: boolean;
@@ -34,7 +33,6 @@ export default function Stepper({
   contentClassName = "",
   footerClassName = "",
   backButtonProps = {},
-  nextButtonProps = {},
   backButtonText = "Back",
   nextButtonText = "Continue",
   disableStepIndicators = false,
@@ -314,6 +312,7 @@ function StepConnector({ isComplete }: StepConnectorProps) {
   );
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface CheckIconProps extends React.SVGProps<SVGSVGElement> {}
 
 function CheckIcon(props: CheckIconProps) {

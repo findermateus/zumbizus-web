@@ -12,15 +12,17 @@ export default class NpcDAO {
       },
     });
 
-    return !npc ? null :  {
-      userId: npc.userId,
-      name: npc.name,
-      gender: npc.gender as Gender,
-      hairColor: npc.hairColor as string,
-      skinColor: npc.skinColor,
-      hairOption: npc.hairOption as HairOption,
-      npcRejections: npc.npcRejections
-    };
+    return !npc
+      ? null
+      : {
+          userId: npc.userId,
+          name: npc.name,
+          gender: npc.gender as Gender,
+          hairColor: npc.hairColor as string,
+          skinColor: npc.skinColor,
+          hairOption: npc.hairOption as HairOption,
+          npcRejections: npc.npcRejections,
+        };
   }
 
   async createNpc(
