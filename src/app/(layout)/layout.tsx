@@ -11,7 +11,7 @@ export default function Layout({
 }>) {
   return (
     <>
-      <Toaster />
+      <Toaster position="top-center" richColors={true} />
       <Header />
       <main className="flex-1">{children}</main>
       <TargetCursorWrapper />

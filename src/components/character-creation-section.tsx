@@ -9,6 +9,7 @@ import { saveNpc } from "@/lib/actions/npc.actions";
 import { StepCard } from "@/components/step-card";
 import { StepNav } from "@/components/step-nav";
 import { SummaryRow } from "@/components/summary-row";
+import { Cog, Hammer, type LucideIcon, Package, Shield, ShoppingCart } from "lucide-react";
 
 interface CharacterCreationSectionProps {
   npc: NpcWithRejections | null;
@@ -65,7 +66,48 @@ const HAIR_OPTIONS: { label: string; value: HairOption }[] = [
   { label: "Moicano", value: HairOption.mohawk },
 ];
 
-const STEPS = ["Gênero", "Pele", "Cabelo", "Nome", "Confirmação"];
+const validCategories = ["creation", "production", "supplies", "defense", "commerce"] as const;
+type NpcCategory = (typeof validCategories)[number];
+
+const CATEGORY_OPTIONS: {
+  label: string;
+  value: NpcCategory;
+  icon: LucideIcon;
+  description: string;
+}[] = [
+  {
+    label: "Criação",
+    value: "creation",
+    icon: Hammer,
+    description: "Artesãos e construtores que criam itens e estruturas",
+  },
+  {
+    label: "Produção",
+    value: "production",
+    icon: Cog,
+    description: "Especialistas em manufatura e processamento de recursos",
+  },
+  {
+    label: "Suprimentos",
+    value: "supplies",
+    icon: Package,
+    description: "Responsáveis pelo armazenamento e distribuição de materiais",
+  },
+  {
+    label: "Defesa",
+    value: "defense",
+    icon: Shield,
+    description: "Guardiões e combatentes que protegem a comunidade",
+  },
+  {
+    label: "Comércio",
+    value: "commerce",
+    icon: ShoppingCart,
+    description: "Negociantes e mercadores que movimentam a economia",
+  },
+];
+
+const STEPS = ["Gênero", "Pele", "Cabelo", "Categoria", "Nome", "Confirmação"];
 const TOTAL_STEPS = STEPS.length;
 
 export default function CharacterCreationSection({ npc }: CharacterCreationSectionProps) {
@@ -73,11 +115,13 @@ export default function CharacterCreationSection({ npc }: CharacterCreationSecti
   const [selectedSkinColor, setSelectedSkinColor] = useState<string>(() => npc?.skinColor ?? SkinColor.CLARO);
   const [selectedHairOption, setSelectedHairOption] = useState<HairOption>(() => npc?.hairOption ?? HairOption.none);
   const [selectedHairColor, setSelectedHairColor] = useState<string>(() => npc?.hairColor ?? HAIR_COLORS[0].value);
+  const [selectedCategory, setSelectedCategory] = useState<NpcCategory>("creation");
   const [characterName, setCharacterName] = useState<string>(() => npc?.name ?? "");
   const [isCompleted, setIsCompleted] = useState<boolean>(() => npc !== null);
   const [currentStep, setCurrentStep] = useState<number>(1);
 
   const stepRefs = [
+    useRef<HTMLDivElement>(null),
     useRef<HTMLDivElement>(null),
     useRef<HTMLDivElement>(null),
     useRef<HTMLDivElement>(null),
@@ -95,7 +139,7 @@ export default function CharacterCreationSection({ npc }: CharacterCreationSecti
 
   const handleConfirm = async () => {
     if (characterName.length < 3 || characterName.length > 30) {
-      toast.error("Nome deve ter entre 3 e 30 caracteres", { position: "top-center" });
+      toast.error("Nome deve ter entre 3 e 30 caracteres");
       return;
     }
 
@@ -105,7 +149,8 @@ export default function CharacterCreationSection({ npc }: CharacterCreationSecti
         selectedGender,
         selectedSkinColor as SkinColor,
         selectedHairOption,
-        selectedHairColor
+        selectedHairColor,
+        selectedCategory
       );
 
       if ("error" in result) {
@@ -113,12 +158,13 @@ export default function CharacterCreationSection({ npc }: CharacterCreationSecti
           INVALID_HAIR_COLOR: "Cor de cabelo inválida",
           INVALID_CHARACTER_NAME: "Nome deve ter entre 3 e 30 caracteres",
           CHARACTER_NAME_TAKEN: "Nome já está em uso, escolha outro",
+          INVALID_CATEGORY: "Categoria inválida",
         };
-        toast.error(mappedErrors[result.error] || "Erro ao salvar o personagem", { position: "top-center" });
+        toast.error(mappedErrors[result.error] || "Erro ao salvar o personagem");
         return;
       }
 
-      toast.success("Personagem salvo com sucesso!", { position: "top-center" });
+      toast.success("Personagem salvo com sucesso!");
       setIsCompleted(true);
     } catch {
       toast.error("Ocorreu um erro ao salvar seu personagem. Tente novamente.");
@@ -132,6 +178,8 @@ export default function CharacterCreationSection({ npc }: CharacterCreationSecti
   };
 
   if (isCompleted) {
+    const categoryOption = CATEGORY_OPTIONS.find((c) => c.value === selectedCategory);
+
     return (
       <div className="flex flex-col gap-8 p-8 rounded-2xl border border-border bg-card/50 shadow-xl w-full max-w-2xl">
         <div className="flex flex-col gap-2 text-center">
@@ -158,6 +206,13 @@ export default function CharacterCreationSection({ npc }: CharacterCreationSecti
             value={SkinColorLabel[selectedSkinColor as SkinColor]}
             swatch={selectedSkinColor}
           />
+          {categoryOption && (
+            <SummaryRow
+              label="Categoria"
+              value={categoryOption.label}
+              icon={<categoryOption.icon size={14} strokeWidth={1.5} className="text-muted-foreground" />}
+            />
+          )}
         </div>
 
         <Button onClick={handleEdit} variant="outline" className="w-full cursor-target cursor-none">
@@ -204,7 +259,6 @@ export default function CharacterCreationSection({ npc }: CharacterCreationSecti
           {currentStep > 1 && <StepNav onNext={() => advanceTo(2)} />}
         </StepCard>
 
-        {/* eslint-disable-next-line react-hooks/refs */}
         <StepCard ref={stepRefs[1]} stepNumber={2} currentStep={currentStep} title="Escolha sua Cor de Pele">
           <div className="flex flex-wrap justify-center gap-3">
             {Object.values(SkinColor).map((color) => (
@@ -225,7 +279,6 @@ export default function CharacterCreationSection({ npc }: CharacterCreationSecti
           <StepNav onBack={() => advanceTo(1)} onNext={() => advanceTo(3)} />
         </StepCard>
 
-        {/* eslint-disable-next-line react-hooks/refs */}
         <StepCard ref={stepRefs[2]} stepNumber={3} currentStep={currentStep} title="Escolha seu Cabelo">
           <div className="flex flex-wrap justify-center gap-2 max-h-44 overflow-y-auto pr-1">
             {HAIR_OPTIONS.map((option) => (
@@ -272,8 +325,53 @@ export default function CharacterCreationSection({ npc }: CharacterCreationSecti
           <StepNav onBack={() => advanceTo(2)} onNext={() => advanceTo(4)} />
         </StepCard>
 
-        {/* eslint-disable-next-line react-hooks/refs */}
-        <StepCard ref={stepRefs[3]} stepNumber={4} currentStep={currentStep} title="Nome do Personagem">
+        <StepCard ref={stepRefs[3]} stepNumber={4} currentStep={currentStep} title="Categoria do NPC">
+          <p className="text-sm text-muted-foreground text-center">Qual será o papel deste personagem na comunidade?</p>
+
+          <div className="flex flex-wrap justify-center gap-3">
+            {CATEGORY_OPTIONS.map((option) => {
+              const Icon = option.icon;
+              const isSelected = selectedCategory === option.value;
+              return (
+                <button
+                  key={option.value}
+                  onClick={() => {
+                    setSelectedCategory(option.value);
+                    if (currentStep === 4) advanceTo(5);
+                  }}
+                  className={`group flex flex-col items-center gap-2 px-4 py-5 rounded-xl border-2 transition-all duration-200 cursor-none cursor-target w-[calc(50%-6px)] sm:w-[calc(33.333%-8px)]
+                  ${
+                    isSelected
+                      ? "border-primary bg-primary/10 shadow-md shadow-primary/10"
+                      : "border-border bg-card hover:border-primary/40 hover:bg-primary/5"
+                  }`}
+                >
+                  <Icon
+                    className={`transition-all duration-200 group-hover:scale-110 ${
+                      isSelected ? "scale-110 text-primary" : "text-muted-foreground"
+                    }`}
+                    size={36}
+                    strokeWidth={1.5}
+                  />
+                  <span className={`text-sm font-semibold ${isSelected ? "text-primary" : "text-foreground"}`}>
+                    {option.label}
+                  </span>
+                  <span className="text-xs text-muted-foreground text-center leading-snug">{option.description}</span>
+
+                  {isSelected && (
+                    <span className="mt-1 inline-flex items-center gap-1 text-[10px] font-medium text-primary bg-primary/15 px-2 py-0.5 rounded-full">
+                      ✓ Selecionado
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+
+          <StepNav onBack={() => advanceTo(3)} onNext={() => advanceTo(5)} />
+        </StepCard>
+
+        <StepCard ref={stepRefs[4]} stepNumber={5} currentStep={currentStep} title="Nome do Personagem">
           <p className="text-sm text-muted-foreground text-center">Entre 3 e 30 caracteres</p>
           <input
             type="text"
@@ -285,19 +383,18 @@ export default function CharacterCreationSection({ npc }: CharacterCreationSecti
           />
           <p className="text-xs text-muted-foreground text-right">{characterName.length}/30</p>
           <StepNav
-            onBack={() => advanceTo(3)}
+            onBack={() => advanceTo(4)}
             onNext={() => {
               if (characterName.length < 3) {
-                toast.error("Nome deve ter pelo menos 3 caracteres", { position: "top-center" });
+                toast.error("Nome deve ter pelo menos 3 caracteres");
                 return;
               }
-              advanceTo(5);
+              advanceTo(6);
             }}
           />
         </StepCard>
 
-        {/* eslint-disable-next-line react-hooks/refs */}
-        <StepCard ref={stepRefs[4]} stepNumber={5} currentStep={currentStep} title="Confirmar Personagem">
+        <StepCard ref={stepRefs[5]} stepNumber={6} currentStep={currentStep} title="Confirmar Personagem">
           <div className="flex flex-col gap-3 p-4 rounded-lg border border-border bg-card/50">
             <SummaryRow label="Nome" value={characterName} />
             <SummaryRow label="Gênero" value={GENDER_OPTIONS.find((g) => g.value === selectedGender)?.label} />
@@ -314,10 +411,20 @@ export default function CharacterCreationSection({ npc }: CharacterCreationSecti
               value={SkinColorLabel[selectedSkinColor as SkinColor]}
               swatch={selectedSkinColor}
             />
+            {(() => {
+              const cat = CATEGORY_OPTIONS.find((c) => c.value === selectedCategory);
+              return cat ? (
+                <SummaryRow
+                  label="Categoria"
+                  value={cat.label}
+                  icon={<cat.icon size={14} strokeWidth={1.5} className="text-muted-foreground" />}
+                />
+              ) : null;
+            })()}
           </div>
 
           <div className="flex gap-3 pt-2">
-            <Button variant="outline" className="flex-1 cursor-target cursor-none" onClick={() => advanceTo(4)}>
+            <Button variant="outline" className="flex-1 cursor-target cursor-none" onClick={() => advanceTo(5)}>
               Voltar
             </Button>
             <Button className="flex-1 cursor-target cursor-none" onClick={handleConfirm}>

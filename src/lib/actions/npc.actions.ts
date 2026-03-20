@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@/auth";
-import { Gender, HairOption, SkinColor } from "@/types/npc.types";
+import { Gender, HairOption, isCategory, SkinColor } from "@/types/npc.types";
 import NpcDAO from "@/lib/data-access-objects/npc-dao";
 
 export async function saveNpc(
@@ -9,7 +9,8 @@ export async function saveNpc(
   gender: Gender,
   skinColor: SkinColor,
   hairOption: HairOption,
-  hairColor: string
+  hairColor: string,
+  category: string
 ): Promise<{ error: string } | { success: boolean }> {
   const session = await auth();
 
@@ -25,6 +26,10 @@ export async function saveNpc(
     return { error: "INVALID_CHARACTER_NAME" };
   }
 
+  if (!isCategory(category)) {
+    return { error: "INVALID_CATEGORY" };
+  }
+
   const npcDAO = new NpcDAO();
 
   const npcWithTheSameName = await npcDAO.findByName(characterName);
@@ -36,9 +41,27 @@ export async function saveNpc(
   const npc = await npcDAO.findByUserId(session.user.userId);
 
   if (!npc) {
-    await npcDAO.createNpc(session.user.userId, characterName, gender, skinColor, hairOption, hairColor, "pending");
+    await npcDAO.createNpc(
+      session.user.userId,
+      characterName,
+      gender,
+      skinColor,
+      hairOption,
+      hairColor,
+      category,
+      "pending"
+    );
   } else {
-    await npcDAO.updateNpc(session.user.userId, characterName, gender, skinColor, hairOption, hairColor, "pending");
+    await npcDAO.updateNpc(
+      session.user.userId,
+      characterName,
+      gender,
+      skinColor,
+      hairOption,
+      hairColor,
+      category,
+      "pending"
+    );
   }
 
   return { success: true };

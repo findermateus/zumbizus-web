@@ -1,4 +1,10 @@
-export type Category = "creation" | "production" | "supplies" | "defense" | "commerce";
+const validCategories = ["creation", "production", "supplies", "defense", "commerce"] as const;
+
+export type Category = (typeof validCategories)[number];
+
+export function isCategory(value: string): value is Category {
+  return validCategories.includes(value as Category);
+}
 
 export interface NpcWithRejections {
   userId: number;

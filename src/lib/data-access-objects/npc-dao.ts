@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
-import { Gender, HairOption, NpcWithRejections, SkinColor } from "@/types/npc.types";
+import { Category, Gender, HairOption, NpcWithRejections, SkinColor } from "@/types/npc.types";
+import { ApprovalStatus } from "@/generated/prisma/enums";
 
 export default class NpcDAO {
   async findByUserId(userId: number): Promise<NpcWithRejections | null> {
@@ -35,7 +36,8 @@ export default class NpcDAO {
     skinColor: SkinColor,
     hairOption: HairOption,
     hairColor: string,
-    status: string
+    category: Category,
+    status: ApprovalStatus
   ) {
     const result = await prisma.npc.create({
       data: {
@@ -45,8 +47,8 @@ export default class NpcDAO {
         skinColor: skinColor,
         hairOption: hairOption,
         hairColor: hairColor,
+        selectedCategory: category,
         approvalStatus: status,
-        selectedCategory: "",
       },
     });
 
@@ -60,7 +62,8 @@ export default class NpcDAO {
     skinColor: SkinColor,
     hairOption: HairOption,
     hairColor: string,
-    status: string
+    category: Category,
+    status: ApprovalStatus
   ): Promise<void> {
     await prisma.npc.update({
       where: {
@@ -72,8 +75,8 @@ export default class NpcDAO {
         skinColor: skinColor,
         hairOption: hairOption,
         hairColor: hairColor,
+        selectedCategory: category,
         approvalStatus: status,
-        selectedCategory: "",
       },
     });
   }
