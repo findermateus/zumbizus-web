@@ -42,7 +42,7 @@ export default function LoginSection() {
                 await signIn(provider.providerKey);
               }}
             >
-              <Button type="submit" variant="outline" className="w-full cursor-target" size="lg">
+              <Button type="submit" variant="outline" className="w-full cursor-target cursor-none" size="lg">
                 {provider.icon}
                 Entrar com {provider.name}
               </Button>

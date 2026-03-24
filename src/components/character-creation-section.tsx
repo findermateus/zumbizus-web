@@ -9,7 +9,7 @@ import { saveNpc } from "@/lib/actions/npc.actions";
 import { StepCard } from "@/components/step-card";
 import { StepNav } from "@/components/step-nav";
 import { SummaryRow } from "@/components/summary-row";
-import { Cog, Hammer, type LucideIcon, Package, Shield, ShoppingCart } from "lucide-react";
+import { Hammer, type LucideIcon, Package, Shield, ShoppingCart } from "lucide-react";
 
 interface CharacterCreationSectionProps {
   npc: NpcWithRejections | null;
@@ -66,7 +66,7 @@ const HAIR_OPTIONS: { label: string; value: HairOption }[] = [
   { label: "Moicano", value: HairOption.mohawk },
 ];
 
-const validCategories = ["creation", "production", "supplies", "defense", "commerce"] as const;
+const validCategories = ["production", "supplies", "defense", "commerce"] as const;
 type NpcCategory = (typeof validCategories)[number];
 
 const CATEGORY_OPTIONS: {
@@ -76,16 +76,10 @@ const CATEGORY_OPTIONS: {
   description: string;
 }[] = [
   {
-    label: "Criação",
-    value: "creation",
-    icon: Hammer,
-    description: "Artesãos e construtores que criam itens e estruturas",
-  },
-  {
     label: "Produção",
     value: "production",
-    icon: Cog,
-    description: "Especialistas em manufatura e processamento de recursos",
+    icon: Hammer,
+    description: "Criação, fabricação e processamento de itens e recursos",
   },
   {
     label: "Suprimentos",
@@ -115,7 +109,7 @@ export default function CharacterCreationSection({ npc }: CharacterCreationSecti
   const [selectedSkinColor, setSelectedSkinColor] = useState<string>(() => npc?.skinColor ?? SkinColor.CLARO);
   const [selectedHairOption, setSelectedHairOption] = useState<HairOption>(() => npc?.hairOption ?? HairOption.none);
   const [selectedHairColor, setSelectedHairColor] = useState<string>(() => npc?.hairColor ?? HAIR_COLORS[0].value);
-  const [selectedCategory, setSelectedCategory] = useState<NpcCategory>("creation");
+  const [selectedCategory, setSelectedCategory] = useState<NpcCategory>("production");
   const [characterName, setCharacterName] = useState<string>(() => npc?.name ?? "");
   const [isCompleted, setIsCompleted] = useState<boolean>(() => npc !== null);
   const [currentStep, setCurrentStep] = useState<number>(1);
@@ -328,7 +322,7 @@ export default function CharacterCreationSection({ npc }: CharacterCreationSecti
         <StepCard ref={stepRefs[3]} stepNumber={4} currentStep={currentStep} title="Categoria do NPC">
           <p className="text-sm text-muted-foreground text-center">Qual será o papel deste personagem na comunidade?</p>
 
-          <div className="flex flex-wrap justify-center gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
             {CATEGORY_OPTIONS.map((option) => {
               const Icon = option.icon;
               const isSelected = selectedCategory === option.value;
@@ -339,7 +333,7 @@ export default function CharacterCreationSection({ npc }: CharacterCreationSecti
                     setSelectedCategory(option.value);
                     if (currentStep === 4) advanceTo(5);
                   }}
-                  className={`group flex flex-col items-center gap-2 px-4 py-5 rounded-xl border-2 transition-all duration-200 cursor-none cursor-target w-[calc(50%-6px)] sm:w-[calc(33.333%-8px)]
+                  className={`group flex flex-col items-center gap-2 px-4 py-5 rounded-xl border-2 transition-all duration-200 cursor-none cursor-target
                   ${
                     isSelected
                       ? "border-primary bg-primary/10 shadow-md shadow-primary/10"

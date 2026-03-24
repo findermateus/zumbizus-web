@@ -1,4 +1,4 @@
-const validCategories = ["creation", "production", "supplies", "defense", "commerce"] as const;
+const validCategories = ["production", "supplies", "defense", "commerce"] as const;
 
 export type Category = (typeof validCategories)[number];
 
